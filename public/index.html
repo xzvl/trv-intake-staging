@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Recovery Village - Schedule Treatment</title>
+  <!-- Include the BuildShip Chat Widget script -->
+  <script src="https://unpkg.com/@buildshipapp/chat-widget@^1" defer></script>
+</head>
+<body>
+  <h1>Welcome to The Recovery Village</h1>
+  <!-- Button to open the chat widget -->
+  <button data-buildship-chat-widget-button>Chat with Us</button>
+
+  <!-- Initialize the chat widget configuration -->
+  <script>
+    window.addEventListener("load", () => {
+      window.buildShipChatWidget.config.url = "https://7os5kk.buildship.run/intake-assistant";
+      window.buildShipChatWidget.config.widgetTitle = "Treatment Scheduling Assistant";
+      window.buildShipChatWidget.config.greetingMessage = "Hello! I'm here to assist you with scheduling your treatment. Could we start with your first and last name?";
+      // Optional configurations based on your requirements
+      window.buildShipChatWidget.config.user = {}; // Add user data if available
+      window.buildShipChatWidget.config.openOnLoad = false;
+      window.buildShipChatWidget.config.closeOnOutsideClick = true;
+      window.buildShipChatWidget.config.disableErrorAlert = false;
+      window.buildShipChatWidget.config.responseIsAStream = false;
+    });
+  </script>
+</body>
+</html>

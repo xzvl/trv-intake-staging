@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Your custom styles here */
+
+.pos-rel{
+    position: relative;
+}
+.pos-abs{
+    position: absolute;
+}
+.top-0{
+    top: 0px;
+}
+.right-0{
+    right: 0px;
+}
+.bg-accent{
+    background-color: #3E8275;
+}
+.height-100p{
+    height: 100%;
+}

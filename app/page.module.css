@@ -1,0 +1,198 @@
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .header {
+    background-color: #1a237e;
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .main {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .stepTitle {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+  
+  .select, .input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .nameInputs {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .nameInputs input {
+    flex: 1;
+  }
+  
+  .optionsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .optionLabel {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .optionLabel:has(input:checked) {
+    border-color: #1a237e;
+    background-color: #e8eaf6;
+  }
+  
+  .optionLabel input {
+    margin-right: 10px;
+    margin-top: 4px;
+  }
+  
+  .optionText {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .optionText strong {
+    margin-bottom: 5px;
+  }
+  
+  .optionText p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #666;
+  }
+  
+  .submitButton {
+    background-color: #1a237e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: flex-end;
+  }
+  
+  .submitButton:hover {
+    background-color: #283593;
+  }
+  
+  .secureInfo {
+    text-align: center;
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 15px;
+  }
+  
+  .questionTitle {
+    font-size: 1em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .radioGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .radioLabel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1em;
+  }
+  
+  .radioLabel input[type="radio"] {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .disclaimer {
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 10px;
+  }
+  
+  .navigationButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .backButton {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .backButton:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .checkboxGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1em;
+  }
+  
+  .checkboxLabel input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .progressIndicators {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .progressDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin: 0 5px;
+  }
+  
+  .progressDot.completed {
+    background-color: #1a237e;
+  }
+  
