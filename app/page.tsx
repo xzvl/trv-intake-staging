@@ -1524,6 +1524,11 @@ export default function Home() {
                       {step === steps.length ? 'Submit' : 'Continue'}
                     </button>
                   )}
+                  {step === 1 && (
+                  <div className="mt-4 flex items-center">
+                    <span className="ml-2 text-xs text-gray-600">By submitting this form, you agree to opt in to communications from The Recovery Village. Standard message and data rates may apply.</span>
+                  </div>
+                  )}
                   <div className="mt-4 flex items-center">
                     <Lock className="w-5 h-5 text-gray-500" />
                     <span className="ml-2 text-sm text-gray-600">Your Information is Secure</span>
