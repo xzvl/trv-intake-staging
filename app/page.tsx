@@ -16,6 +16,7 @@ interface FormData {
   primaryIssue: string;
   email: string;
   allSubstancesPast2Weeks: string[];
+  receivingCommunications: string;
   experiencingWithdrawal: string;
   chronicConditions: string[];
   canManageDailyActivities: string;
@@ -70,6 +71,7 @@ const initialFormState: FormData = {
   primaryIssue: '',
   email: '',
   allSubstancesPast2Weeks: [],
+  receivingCommunications: 'No',
   experiencingWithdrawal: 'Yes',
   chronicConditions: [],
   canManageDailyActivities: 'Yes',
@@ -251,9 +253,9 @@ export default function Home() {
   const validateStep = (currentStep: number): boolean => {
     switch (currentStep) {
       case 1:
-        return !!formData.insuranceProvider && !!formData.policyNumber && !!formData.phoneNumber;
+        return !!formData.location && !!formData.insuranceProvider && !!formData.policyNumber && !!formData.phoneNumber && !!formData.email && !!formData.receivingCommunications;
       case 2:
-        return !!formData.treatmentType && !!formData.location && !!formData.primaryIssue && !!formData.email;
+        return !!formData.treatmentType && !!formData.primaryIssue;
       case 3:
         return !!formData.allSubstancesPast2Weeks && !!formData.experiencingWithdrawal;
       case 4:
@@ -406,7 +408,7 @@ export default function Home() {
     const progressPercentage = Math.round((completedSteps / (totalSteps)) * 100);
 
     return (
-      <div className="mb-6">
+      <div className="mb-6" data-id={step}>
         <h2 className="sr-only">Progress</h2>
         <div className="relative">
           <div className="h-2 bg-gray-200 rounded-full">
@@ -419,6 +421,9 @@ export default function Home() {
             {progressPercentage}% Complete
           </p>
         </div>
+        {step === 2 && (
+        <div className="display-none"></div>
+        )}
       </div>
     );
   };
@@ -443,8 +448,8 @@ export default function Home() {
   const renderCoverageCheck = () => {
     return (
       <>
-        <h2 className="text-lg font-medium text-gray-900">Check Your Coverage</h2>
-        <p className="mt-1 text-sm text-gray-600">
+        <h2 className="text-lg font-medium text-gray-900 pad-top-150">Check Your Coverage</h2>
+        <p className="mt-1 text-base text-gray-600">
           Instantly check if your insurance covers treatment at The Recovery Village. All fields are required to verify eligibility.
         </p>
         {submitMessage && (
@@ -452,8 +457,37 @@ export default function Home() {
             <p className="font-medium">{submitMessage.text}</p>
           </div>
         )}
-        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <div className="sm:col-span-3">
+        <h3 className="new-sub-title">INSURANCE INFO.</h3>
+        <div className="new-form-container-wrap mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+  
+          <div className="sm:col-span-6">
+            <label htmlFor="location" className="block text-sm font-medium text-gray-800">
+              Location
+            </label>
+            <div className="mt-1">
+              <select
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
+              >
+                <option value="">Select a location</option>
+                <option value="iaff">IAFF Center of Excellence</option>
+                <option value="orlando">Orlando Recovery Center</option>
+                <option value="atlanta">The Recovery Village Atlanta</option>
+                <option value="columbus">The Recovery Village Columbus</option>
+                <option value="cherry_hill">The Recovery Village Cherry Hill</option>
+                <option value="indianapolis">The Recovery Village Indianapolis</option>
+                <option value="kansas_city">The Recovery Village Kansas City</option>
+                <option value="palm_beach">The Recovery Village Palm Beach</option>
+                <option value="palmer_lake">The Recovery Village Palmer Lake</option>
+                <option value="ridgefield">The Recovery Village Ridgefield</option>
+                <option value="umatilla">The Recovery Village Umatilla</option>
+              </select>
+            </div>
+          </div>
+          <div className="sm:col-span-6">
             <label htmlFor="insuranceProvider" className="block text-sm font-medium text-gray-800">
               Insurance Provider
             </label>
@@ -494,8 +528,22 @@ export default function Home() {
               </select>
             </div>
           </div>
-
-          <div className="sm:col-span-3">
+        {formData.insuranceProvider === 'other' && (
+          <div className="sm:col-span-6">
+            <label htmlFor="otherInsuranceProvider" className="block text-sm font-medium text-gray-800">
+              Please specify your insurance provider
+            </label>
+            <input
+              type="text"
+              name="otherInsuranceProvider"
+              id="otherInsuranceProvider"
+              value={formData.otherInsuranceProvider || ''}
+              onChange={handleChange}
+              className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 mt-1 text-base shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
+            />
+          </div>
+        )}
+          <div className="sm:col-span-6">
             <label htmlFor="policyNumber" className="block text-sm font-medium text-gray-800">
               Policy Number
             </label>
@@ -506,11 +554,31 @@ export default function Home() {
                 id="policyNumber"
                 value={formData.policyNumber}
                 onChange={handleChange}
+                placeholder="Placeholder"
                 className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
               />
             </div>
           </div>
 
+          <div className="sm:col-span-6">
+            <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-800">
+              Date of Birth
+            </label>
+            <div className="mt-1">
+              <input
+                type="date"
+                name="dateOfBirth"
+                id="dateOfBirth"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base text-gray-700 shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
+              />
+            </div>
+          </div>
+        </div>
+
+        <h3 className="new-sub-title">CONTACT INFO.</h3>
+        <div className="new-form-container-wrap mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-3">
             <label htmlFor="firstName" className="block text-sm font-medium text-gray-800">
               First Name
@@ -522,6 +590,7 @@ export default function Home() {
                 id="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
+                placeholder="First Name"
                 className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
               />
             </div>
@@ -538,14 +607,15 @@ export default function Home() {
                 id="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
+                placeholder="Last Name"
                 className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
               />
             </div>
           </div>
 
-          <div className="sm:col-span-3">
+          <div className="sm:col-span-6">
             <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-800">
-              Phone Number (We'll only call you if we need additional information)
+              Phone Number
             </label>
             <div className="mt-1 pos-rel">
               <input
@@ -554,42 +624,47 @@ export default function Home() {
                 id="phoneNumber"
                 value={formData.phoneNumber}
                 onChange={handleChange}
+                placeholder="(123) 456-7890"
                 className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
               />
             </div>
           </div>
 
-          <div className="sm:col-span-3">
-            <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-800">
-              Date of Birth
+          <div className="sm:col-span-6">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-800">
+            Email Address
             </label>
             <div className="mt-1">
               <input
-                type="date"
-                name="dateOfBirth"
-                id="dateOfBirth"
-                value={formData.dateOfBirth}
+                type="email"
+                name="email"
+                id="email"
+                value={formData.email}
                 onChange={handleChange}
+                placeholder="Placeholder"
+                required
                 className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base text-gray-700 shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
               />
             </div>
           </div>
-        </div>
-        {formData.insuranceProvider === 'other' && (
-          <div className="mt-4">
-            <label htmlFor="otherInsuranceProvider" className="block text-sm font-medium text-gray-800">
-              Please specify your insurance provider
-            </label>
-            <input
-              type="text"
-              name="otherInsuranceProvider"
-              id="otherInsuranceProvider"
-              value={formData.otherInsuranceProvider || ''}
-              onChange={handleChange}
-              className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 mt-1 text-base shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
-            />
+
+          <div className="sm:col-span-6">
+                <div key="receivingCommunications" className="flex items-center">
+                  <input
+                    id={`receivingCommunications`}
+                    name="receivingCommunications"
+                    type="checkbox"
+                    value={formData.receivingCommunications}
+                    onChange={handleChange}
+                    className="h-4 w-4 border-gray-400 text-yellow-500 focus:ring-yellow-500"
+                  />
+                  <label htmlFor={`receivingCommunications`} className="ml-2 block text-sm font-medium text-gray-800">
+                  I am interested in receiving communications from The Recovery Village
+                  </label>
+                </div>
           </div>
-        )}
+          
+        </div>
       </>
     );
   };
@@ -597,15 +672,23 @@ export default function Home() {
   const renderTreatmentInfo = () => {
     return (
       <>
-        <h2 className="text-lg font-medium text-gray-900">Treatment Information</h2>
-        <p className="mt-1 text-sm text-gray-600">
-          Ready to start treatment? Please take this short, 60-second assessment to get your treatment scheduled.
-        </p>
         {vobMessage && (
-          <div className={`mt-4 mb-6 p-4 ${vobMessage.type === 'success' ? 'text-green-700 border-green-700 bg-green-50' : 'text-red-700 border-red-700 bg-red-50'} border-l-4`}>
-            <p className="font-medium">{vobMessage.text}</p>
+          <div className="insurance-result-wrap">
+            <h3>Your Insurance Results</h3>
+            <p className="mt-1 text-sm text-gray-600">Results may take a few seconds to populate.</p>
+            <div className={`mt-4 p-4 ${vobMessage.type === 'success' ? 'text-green-700 border-green-700 bg-green-50' : 'text-red-700 border-red-700 bg-red-50'}`}>
+              <p className="font-base">{vobMessage.text}</p>
+            </div>
           </div>
         )}
+        <h2 className="text-lg font-medium text-gray-900">Ready to start treatment?</h2>
+        <p className="mt-1 mb-4 text-base text-gray-600">
+        Complete this short assessment to get your treatment scheduled.
+        </p>
+        <p className="mt-1 mb-4 text-base">
+        Please select your primary reason for treatment:
+        </p>
+        <h2 className="text-lg font-medium text-gray-900">Treatment Information</h2>
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-3">
             <label htmlFor="treatmentType" className="block text-sm font-medium text-gray-800">
@@ -629,34 +712,6 @@ export default function Home() {
           </div>
   
           <div className="sm:col-span-3">
-            <label htmlFor="location" className="block text-sm font-medium text-gray-800">
-              Location
-            </label>
-            <div className="mt-1">
-              <select
-                id="location"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
-              >
-                <option value="">Select a location</option>
-                <option value="iaff">IAFF Center of Excellence</option>
-                <option value="orlando">Orlando Recovery Center</option>
-                <option value="atlanta">The Recovery Village Atlanta</option>
-                <option value="columbus">The Recovery Village Columbus</option>
-                <option value="cherry_hill">The Recovery Village Cherry Hill</option>
-                <option value="indianapolis">The Recovery Village Indianapolis</option>
-                <option value="kansas_city">The Recovery Village Kansas City</option>
-                <option value="palm_beach">The Recovery Village Palm Beach</option>
-                <option value="palmer_lake">The Recovery Village Palmer Lake</option>
-                <option value="ridgefield">The Recovery Village Ridgefield</option>
-                <option value="umatilla">The Recovery Village Umatilla</option>
-              </select>
-            </div>
-          </div>
-  
-          <div className="sm:col-span-3">
             <label htmlFor="primaryIssue" className="block text-sm font-medium text-gray-800">
               Primary Reason for Treatment
             </label>
@@ -672,23 +727,6 @@ export default function Home() {
                 <option value="alcohol">Substance Abuse</option>
                 <option value="mental_health">Mental Health</option>
               </select>
-            </div>
-          </div>
-
-          <div className="sm:col-span-3">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-800">
-              Email Address (So we can send you your insurance benefit details)
-            </label>
-            <div className="mt-1">
-              <input
-                type="email"
-                name="email"
-                id="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base text-gray-700 shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
-              />
             </div>
           </div>
         </div>
@@ -1504,7 +1542,7 @@ export default function Home() {
 
   return (
     <div className="bg-gradient-to-br from-blue-900 to-black min-h-screen">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-12">
+      <div className="max-res-width max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-12">
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="p-4 sm:p-6">
             {renderSteps()}
@@ -1518,18 +1556,21 @@ export default function Home() {
                   {step !== 9 && step !== 11 && (
                     <button
                       type="submit"
-                      className="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-lg font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                      className="btn-full-center inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-lg font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
                       style={{ backgroundColor: '#3E8275' }}
                     >
-                      {step === steps.length ? 'Submit' : 'Continue'}
+                      {step === steps.length ? 'Submit' : ''}
+                      {step !== 1 && step !== 2 && step !== steps.length ? 'Continue' : ''}
+                      {step === 2 ? 'Start Assessment' : ''}
+                      {step === 1 ? 'Verify My Benefits' : ''}
                     </button>
                   )}
                   {step === 1 && (
-                  <div className="mt-4 flex items-center">
+                  <div className="mt-4 flex items-center display-none">
                     <span className="ml-2 text-xs text-gray-600">By submitting this form, you agree to opt in to communications from The Recovery Village. Standard message and data rates may apply.</span>
                   </div>
                   )}
-                  <div className="mt-4 flex items-center">
+                  <div className="mt-4 flex items-center display-none">
                     <Lock className="w-5 h-5 text-gray-500" />
                     <span className="ml-2 text-sm text-gray-600">Your Information is Secure</span>
                   </div>

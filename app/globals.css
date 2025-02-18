@@ -22,3 +22,55 @@
 .height-100p{
     height: 100%;
 }
+.max-res-width {
+  max-width: 40rem;
+}
+.max-res-width > .bg-white {
+  padding: 20px;
+}
+.pad-top-150{
+font-family: 'Montserrat';
+  padding-top: 0px;
+  font-weight: 600;
+  font-size: 20px;
+}
+.new-sub-title{
+    color: #171745;
+    font-weight: bold;
+    margin-top: 15px;
+}
+.new-form-container-wrap{
+    border-left: 1px solid #D9D9D9;
+    padding: 10px 24px;
+    margin-top: 10px;
+    row-gap: 0.5rem;
+}
+.insurance-result-wrap{
+    border-top: 4px solid #171745;
+    padding: 30px;
+    box-shadow: 0px 4px 4px #ccc;
+    margin-bottom: 30px;
+}
+.insurance-result-wrap h3{
+    font-size: 20px;
+    font-weight: 600;
+}
+.insurance-result-wrap .p-4 {
+    padding: 30px;
+}
+.insurance-result-wrap .p-4 p{
+    color: #1D5248;
+    font-size: 20px;
+    font-weight: 600;
+}
+.max-res-width .mb-6[data-id="2"]{
+    display: none;
+}
+.display-none{
+    display: none;
+}
+.btn-full-center{
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
