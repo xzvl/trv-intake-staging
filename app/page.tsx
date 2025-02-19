@@ -11,7 +11,7 @@ interface FormData {
   phoneNumber: string;
   dateOfBirth: string;
   otherInsuranceProvider?: string;
-  treatmentType: string;
+  allTreatmentType: string[];
   location: string;
   primaryIssue: string;
   email: string;
@@ -66,7 +66,7 @@ const initialFormState: FormData = {
   phoneNumber: '',
   dateOfBirth: '',
   otherInsuranceProvider: '',
-  treatmentType: '',
+  allTreatmentType: [],
   location: '',
   primaryIssue: '',
   email: '',
@@ -148,15 +148,20 @@ export default function Home() {
   const [submitMessage, setSubmitMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
   const [triggerMessage, settriggerMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
   const [vobMessage, setVOBMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
+  const allTreatmentType = [
+    { name: "Inpatient Treatment for Mental Health", checked: false },
+    { name: "Medical Detox", checked: false },
+    { name: "Inpatient Treatment for Substance Use", checked: false },
+    { name: "Outpatient Treatment for Substance Use", checked: false },
+  ];
   const allSubstancesPast2Weeks = [
     { name: "Alcohol", checked: false },
-    { name: "Opiates/Opioids", checked: false },
+    { name: "Opiates", checked: false },
     { name: "Benzos", checked: false },
     { name: "Cocaine/Crack", checked: false },
     { name: "Marijauna", checked: false },
     { name: "Methamphetamine", checked: false },
     { name: "Hallucinogens", checked: false },
-    { name: "Other", checked: false },
   ];
 
   const allChronicConditions = [
@@ -190,19 +195,20 @@ export default function Home() {
   ];
   
   const allMentalHealthConditions = [
-    { name: "Depression", checked: false },
-    { name: "Anxiety", checked: false },
-    { name: "Bipolar", checked: false },
-    { name: "PTSD", checked: false },
-    { name: "Borderline Personality Disorder", checked: false },
-    { name: "Explosive Disorder", checked: false },
-    { name: "Schizoaffective Disorder", checked: false },
-    { name: "Schizophrenia", checked: false },
-    { name: "Dissociative Disorder", checked: false },
     { name: "ADHD", checked: false },
     { name: "Autism", checked: false },
+    { name: "Depression", checked: false },
+    { name: "Bipolar", checked: false },
+    { name: "Schizophrenia", checked: false },
+    { name: "Schizoaffective Disorder", checked: false },
+    { name: "PTSD", checked: false },
+    { name: "Borderline Personality Disorder", checked: false },
+    { name: "Dissociative Disorder", checked: false },
+    { name: "Eating Disorder", checked: false },
+    { name: "None of the above", checked: false },
   ];
   
+  const [treatmentType, setTreatmentType] = useState(allTreatmentType);
   const [SubstancesPast2Weeks, setSubstancesPast2Weeks] = useState(allSubstancesPast2Weeks);
   const [ChronicConditions, setChronicConditions] = useState(allChronicConditions);
   const [MentalHealthConditions, setMentalHealthConditions] = useState(allMentalHealthConditions);
@@ -255,7 +261,7 @@ export default function Home() {
       case 1:
         return !!formData.location && !!formData.insuranceProvider && !!formData.policyNumber && !!formData.phoneNumber && !!formData.email && !!formData.receivingCommunications;
       case 2:
-        return !!formData.treatmentType && !!formData.primaryIssue;
+        return !!formData.allTreatmentType;
       case 3:
         return !!formData.allSubstancesPast2Weeks && !!formData.experiencingWithdrawal;
       case 4:
@@ -670,6 +676,15 @@ export default function Home() {
   };
 
   const renderTreatmentInfo = () => {
+    const updateCheckStatus = index => {
+      setTreatmentType(
+        treatmentType.map((substance, currentIndex) =>
+          currentIndex === index
+            ? { ...substance, checked: !substance.checked }
+            : substance
+        )
+      )
+    }
     return (
       <>
         {vobMessage && (
@@ -688,47 +703,17 @@ export default function Home() {
         <p className="mt-1 mb-4 text-base">
         Please select your primary reason for treatment:
         </p>
-        <h2 className="text-lg font-medium text-gray-900">Treatment Information</h2>
-        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <div className="sm:col-span-3">
-            <label htmlFor="treatmentType" className="block text-sm font-medium text-gray-800">
-              Treatment Type
-            </label>
-            <div className="mt-1">
-              <select
-                id="treatmentType"
-                name="treatmentType"
-                value={formData.treatmentType}
-                onChange={handleChange}
-                className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
-              >
-                <option value="">Select Treatment Type</option>
-                <option value="detox">Detox</option>
-                <option value="inpatient">Inpatient</option>
-                <option value="outpatient">Outpatient</option>
-                <option value="telehealth">Telehealth</option>
-              </select>
-            </div>
-          </div>
-  
-          <div className="sm:col-span-3">
-            <label htmlFor="primaryIssue" className="block text-sm font-medium text-gray-800">
-              Primary Reason for Treatment
-            </label>
-            <div className="mt-1">
-              <select
-                id="primaryIssue"
-                name="primaryIssue"
-                value={formData.primaryIssue}
-                onChange={handleChange}
-                className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
-              >
-                <option value="">Select Primary Issue</option>
-                <option value="alcohol">Substance Abuse</option>
-                <option value="mental_health">Mental Health</option>
-              </select>
-            </div>
-          </div>
+        <div className="mt-2 space-y-2 new-ul-li-style">
+            {treatmentType.map((substance, index) => (
+              <Checkbox
+                key={substance.name}
+                isChecked={substance.checked}
+                checkHandler={() => updateCheckStatus(index)}
+                label={substance.name}
+                index={index}
+                id="allTreatmentType"
+              />
+            ))}
         </div>
       </>
     );
@@ -746,14 +731,14 @@ export default function Home() {
     }
     return (
       <>
-        <h2 className="text-lg font-medium text-gray-900">Substance Use History</h2>
-        <p className="mt-1 text-sm text-gray-600">
-          Please provide some additional information to help us better personalize your treatment.
+        <h2 className="text-lg font-bold text-gray-900">Substance Use History</h2>
+        <p className="mt-1 mb-4 text-base text-gray-600">
+        Please provide some additional information to help us better personalize your treatment.
         </p>
-        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <div className="sm:col-span-3">
-            <h3 className="text-sm font-semibold text-gray-800">Please select all substances you have used in the <u>past two weeks</u>.</h3>
-            <div className="mt-2 space-y-2">
+        <p className="mt-1 mb-4 text-base">
+        Please select all substances you have used in the <u>past two weeks</u>.
+        </p>
+        <div className="mt-2 mb-4 space-y-2 new-ul-li-style">
             {SubstancesPast2Weeks.map((substance, index) => (
               <Checkbox
                 key={substance.name}
@@ -764,12 +749,11 @@ export default function Home() {
                 id="allSubstancesPast2Weeks"
               />
             ))}
-            </div>
-          </div>
-
-          <div className="sm:col-span-3">
-            <h3 className="text-sm font-semibold text-gray-800">Have you experienced withdrawal symptoms including tremors (shakes), tingling, excessive sweating, heart racing, vomiting, or diarrhea in the <u>past two weeks</u>?</h3>
-            <div className="mt-2 space-y-2">
+        </div>
+        <p className="mt-1 mb-4 text-base">
+        Have you experienced withdrawal symptoms including tremors (shakes), tingling, excessive sweating, heart racing, vomiting, or diarrhea in the past two weeks?
+        </p>
+        <div className="mt-2 mb-4 space-y-2 new-yes-no-style">
               {['Yes', 'No'].map((option) => (
                 <div key={option} className="flex items-center">
                   <input
@@ -786,8 +770,6 @@ export default function Home() {
                   </label>
                 </div>
               ))}
-            </div>
-          </div>
         </div>
       </>
     );
@@ -805,11 +787,14 @@ export default function Home() {
     }
     return (
       <>
-        <h2 className="text-lg font-medium text-gray-900">Medical History</h2>
-        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <div className="sm:col-span-6">
-            <h3 className="text-sm font-semibold text-gray-800">Do you have any of the following chronic medical conditions? Select all that apply</h3>
-            <div className="mt-2 space-y-2">
+        <h2 className="text-lg font-bold text-gray-900">Medical History</h2>
+        <p className="mt-1 mb-4 text-base text-gray-600">
+        Please provide some additional information to help us better personalize your treatment.
+        </p>
+        <p className="mt-1 mb-4 text-base">
+        Do you have any of the following medical conditions? <br />Select all that apply:
+        </p>
+        <div className="mt-2 mb-4 space-y-2 new-ul-li-style">
             {ChronicConditions.map((chronicCondition, index) => (
               <Checkbox
                 key={chronicCondition.name}
@@ -820,8 +805,6 @@ export default function Home() {
                 id="chronicConditions"
               />
             ))}
-            </div>
-          </div>
         </div>
       </>
     );
@@ -830,9 +813,9 @@ export default function Home() {
   const renderMedicalNeedsChecks = () => {
     return (
       <>
-        <h2 className="text-lg font-medium text-gray-900">Medical Needs</h2>
-        <p className="mt-1 text-sm text-gray-600">
-          Please provide some additional information to help us better personalize your treatment.
+        <h2 className="text-lg font-bold text-gray-900">Medical Needs</h2>
+        <p className="mt-1 mb-4 text-base text-gray-600">
+        Please provide some additional information to help us better personalize your treatment.
         </p>
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           {[
@@ -848,9 +831,9 @@ export default function Home() {
             { question: "Do you require IV's, TPN, PEG, or J-Tube?", name: "requiresIVorTube" },
             { question: "Do you weigh over 350lbs or less than 85lbs?", name: "weighsMoreThan350lbs" }
           ].map(({ question, name }) => (
-            <div key={name} className="sm:col-span-3">
-              <h3 className="text-sm font-semibold text-gray-800">{question}</h3>
-              <div className="mt-2 space-y-2">
+            <div key={name} className="sm:col-span-6">
+              <p className="mt-1 mb-4 text-base">{question}</p>
+              <div className="mt-2 space-y-2 new-yes-no-style">
                 {['Yes', 'No'].map((option) => (
                   <div key={option} className="flex items-center">
                     <input
@@ -887,14 +870,16 @@ export default function Home() {
     }
     return (
       <>
-        <h2 className="text-lg font-medium text-gray-900">Mental Health History</h2>
-        <p className="mt-1 text-sm text-gray-600">
-          Please let us know more about your mental health history so we can best serve you.
+        <h2 className="text-lg font-bold text-gray-900">Mental Health History</h2>
+        <p className="mt-1 mb-4 text-base text-gray-600">
+        Please provide some additional information to help us better personalize your treatment.
         </p>
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
-            <h3 className="text-sm font-semibold text-gray-800">Do you have a history of any of the following mental health conditions? Select all that apply:</h3>
-            <div className="mt-2 space-y-2">
+            <p className="mt-1 mb-4 text-base">
+            Do you have any of the following mental health conditions? <br />Select all that apply:
+            </p>
+            <div className="mt-2 space-y-2 new-ul-li-style">
               {MentalHealthConditions.map((mentalHealthCondition, index) => (
                 <Checkbox
                   key={mentalHealthCondition.name}
@@ -907,9 +892,11 @@ export default function Home() {
               ))}
             </div>
           </div>
-          <div className="sm:col-span-3">
-            <h3 className="text-sm font-semibold text-gray-800">Are you actively psychotic?</h3>
-            <div className="mt-2 space-y-2">
+          <div className="sm:col-span-6">
+            <p className="mt-1 mb-4 text-base">
+            Are you actively psychotic?
+            </p>
+            <div className="mt-2 space-y-2 new-yes-no-style">
               {['Yes', 'No'].map((option) => (
                 <div key={option} className="flex items-center">
                   <input
@@ -929,9 +916,11 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="sm:col-span-3">
-            <h3 className="text-sm font-semibold text-gray-800">Have you had 3 or more suicide attempts in the past two years?</h3>
-            <div className="mt-2 space-y-2">
+          <div className="sm:col-span-6">
+            <p className="mt-1 mb-4 text-base">
+            Have you had 3 or more suicide attempts in the past 2 years?
+            </p>
+            <div className="mt-2 space-y-2 new-yes-no-style">
               {['Yes', 'No'].map((option) => (
                 <div key={option} className="flex items-center">
                   <input
@@ -951,9 +940,11 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="sm:col-span-3">
-            <h3 className="text-sm font-semibold text-gray-800">In the past year, have you attempted suicide while not under the influence of substances?</h3>
-            <div className="mt-2 space-y-2">
+          <div className="sm:col-span-6">
+            <p className="mt-1 mb-4 text-base">
+            In the past year, have you attempted suicide while not under the influence of substances?
+            </p>
+            <div className="mt-2 space-y-2 new-yes-no-style">
               {['Yes', 'No'].map((option) => (
                 <div key={option} className="flex items-center">
                   <input
@@ -973,9 +964,11 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="sm:col-span-3">
-            <h3 className="text-sm font-semibold text-gray-800">Do you have a history of aggression or aggressive behavior (assault)?</h3>
-            <div className="mt-2 space-y-2">
+          <div className="sm:col-span-6">
+            <p className="mt-1 mb-4 text-base">
+            Do you have a history of aggression or aggressive behavior (assault)?
+            </p>
+            <div className="mt-2 space-y-2 new-yes-no-style">
               {['Yes', 'No'].map((option) => (
                 <div key={option} className="flex items-center">
                   <input
@@ -1004,11 +997,16 @@ export default function Home() {
   const renderLegal = () => {
     return (
       <>
-        <h2 className="text-lg font-medium text-gray-900">Legal History</h2>
+        <h2 className="text-lg font-bold text-gray-900">Legal History</h2>
+        <p className="mt-1 mb-4 text-base text-gray-600">
+        Please provide some additional information to help us better personalize your treatment.
+        </p>
         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <div className="sm:col-span-3">
-            <h3 className="text-sm font-semibold text-gray-800">Do you have current legal issues due to alcohol and/ or drug use?</h3>
-            <div className="mt-2 space-y-2">
+          <div className="sm:col-span-6">
+            <p className="mt-1 mb-4 text-base">
+            Do you have current legal issues due to alcohol and/ or drug use?
+            </p>
+            <div className="mt-2 space-y-2 new-yes-no-style">
               {['Yes', 'No'].map((option) => (
                 <div key={option} className="flex items-center">
                   <input
@@ -1028,9 +1026,11 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="sm:col-span-3">
-            <h3 className="text-sm font-semibold text-gray-800">Do you have prior legal issues due to alcohol and/ or drug use?</h3>
-            <div className="mt-2 space-y-2">
+          <div className="sm:col-span-6">
+            <p className="mt-1 mb-4 text-base">
+            Do you have prior legal issues due to alcohol and/ or drug use?
+            </p>
+            <div className="mt-2 space-y-2 new-yes-no-style">
               {['Yes', 'No'].map((option) => (
                 <div key={option} className="flex items-center">
                   <input
@@ -1050,9 +1050,11 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="sm:col-span-3">
-            <h3 className="text-sm font-semibold text-gray-800">Do you have an upcoming court date in the next two weeks?</h3>
-            <div className="mt-2 space-y-2">
+          <div className="sm:col-span-6">
+            <p className="mt-1 mb-4 text-base">
+            Do you have an upcoming court date?   
+            </p>
+            <div className="mt-2 space-y-2 new-yes-no-style">
               {['Yes', 'No'].map((option) => (
                 <div key={option} className="flex items-center">
                   <input
@@ -1072,9 +1074,11 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="sm:col-span-3">
-            <h3 className="text-sm font-semibold text-gray-800">Are you on probation or parole?</h3>
-            <div className="mt-2 space-y-2">
+          <div className="sm:col-span-6">
+            <p className="mt-1 mb-4 text-base">
+            Are you on probation or parole?
+            </p>
+            <div className="mt-2 space-y-2 new-yes-no-style">
               {['Yes', 'No'].map((option) => (
                 <div key={option} className="flex items-center">
                   <input
@@ -1094,9 +1098,11 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="sm:col-span-3">
-            <h3 className="text-sm font-semibold text-gray-800">Have you been convicted of a sex crime?</h3>
-            <div className="mt-2 space-y-2">
+          <div className="sm:col-span-6">
+            <p className="mt-1 mb-4 text-base">
+            Have you been convicted of a sex crime?
+            </p>
+            <div className="mt-2 space-y-2 new-yes-no-style">
               {['Yes', 'No'].map((option) => (
                 <div key={option} className="flex items-center">
                   <input
@@ -1116,9 +1122,11 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="sm:col-span-3">
-            <h3 className="text-sm font-semibold text-gray-800">Are you a registered sex offender?</h3>
-            <div className="mt-2 space-y-2">
+          <div className="sm:col-span-6">
+            <p className="mt-1 mb-4 text-base">
+            Are you a registered sex offender?
+            </p>
+            <div className="mt-2 space-y-2 new-yes-no-style">
               {['Yes', 'No'].map((option) => (
                 <div key={option} className="flex items-center">
                   <input
@@ -1146,12 +1154,16 @@ export default function Home() {
   const renderApproval = () => {
     return (
       <>
-        <h2 className="text-lg font-medium text-gray-900">Approval</h2>
-        <div className="mt-4 p-4 bg-green-100 text-green-700 border-l-4 border-green-700">
-          <p className="font-medium">Congratulations, your assessment is approved and you can schedule treatment immediately!</p>
+        <div className="insurance-result-wrap">
+          <h3>Approval Results</h3>
+          <p className="mt-1 text-sm text-gray-600">Results may take a few seconds to populate.</p>
+          <div className="mt-4 p-4 text-green-700 border-green-700 bg-green-50">
+            <p className="font-base">Congratulations, your assessment is approved and you can schedule treatment immediately!</p>
+          </div>
         </div>
         <div className="mt-6">
-          <h3 className="text-sm font-semibold text-gray-800">When would you like to start treatment?</h3>
+          <span className="text-sm font-bold text-dark-blue-900">FINAL STEP: SCHEDULE ADMISSION</span>
+          <h2 className="text-lg font-medium text-gray-900">When would you like to start treatment?</h2>
           <div className="mt-2 space-y-2">
             {['Immediately', 'Within the next 24-48 hours', 'In 3 days or more'].map((option) => (
               <div key={option} className="flex items-center">
@@ -1204,16 +1216,12 @@ export default function Home() {
 
     return (
       <>
-        <h2 className="text-lg font-medium text-gray-900">Schedule Your Admission</h2>
-        {formData.travelArrangements === 'No' && triggerMessage && (
-          <div className={`mt-4 mb-6 p-4 ${triggerMessage.type === 'success' ? 'text-green-700 border-green-700 bg-green-50' : 'text-red-700 border-red-700 bg-red-50'} border-l-4`}>
-            <p className="font-medium">{triggerMessage.text}</p>
-          </div>
-        )}
-        <p className="mt-1 text-sm text-gray-600">Can you make travel arrangements to arrive at the facility at this time?</p>
-        <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
           <div className="sm:col-span-6">
-            <div className="mt-2 space-y-2">
+            <p className="mt-1 mb-4 text-base">
+            Do you need assistance with transportation to the facility?
+            </p>
+            <div className="mt-2 space-y-2 new-yes-no-style">
               {['Yes', 'No'].map((option) => (
                 <div key={option} className="flex items-center">
                   <input
@@ -1226,7 +1234,7 @@ export default function Home() {
                     className="h-4 w-4 border-gray-400 text-yellow-500 focus:ring-yellow-500"
                   />
                   <label htmlFor={`travelArrangements-${option.toLowerCase()}`} className="ml-2 block text-sm font-medium text-gray-800">
-                    {option === 'Yes' ? 'Yes' : 'No, I need assistance with transportation'}
+                    {option === 'Yes' ? 'Yes' : 'No'}
                   </label>
                 </div>
               ))}
@@ -1236,10 +1244,10 @@ export default function Home() {
 
         {formData.travelArrangements === 'Yes' && (
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-            <div className="sm:col-span-3">
-              <label htmlFor="admissionDate" className="block text-sm font-medium text-gray-800">
-                Admission Date
-              </label>
+            <div className="sm:col-span-6">
+              <label htmlFor="admissionDate" className="mt-1 mb-4 text-base">
+            Admission Date
+            </label>
               <div className="mt-1">
                 <input
                   type="date"
@@ -1254,10 +1262,10 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="sm:col-span-3">
-              <label htmlFor="admissionTime" className="block text-sm font-medium text-gray-800">
-                Admission Time
-              </label>
+            <div className="sm:col-span-6">
+              <label htmlFor="admissionTime" className="mt-1 mb-4 text-base">
+            Admission Time
+            </label>
               <div className="mt-1">
                 <input
                   type="time"
@@ -1276,9 +1284,9 @@ export default function Home() {
         {formData.travelArrangements === 'No' && (
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-6">
-              <label htmlFor="pickupAddress" className="block text-sm font-medium text-gray-800">
-                Pickup Address
-              </label>
+              <label htmlFor="pickupAddress" className="mt-1 mb-4 text-base">
+              Pickup Address
+            </label>
               <div className="mt-1">
                 <input
                   type="text"
@@ -1293,10 +1301,10 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="sm:col-span-3">
-              <label htmlFor="pickupDate" className="block text-sm font-medium text-gray-800">
-                Pickup Date
-              </label>
+            <div className="sm:col-span-6">
+              <label htmlFor="pickupDate" className="mt-1 mb-4 text-base">
+              Pickup Date
+            </label>
               <div className="mt-1">
                 <input
                   type="date"
@@ -1311,10 +1319,10 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="sm:col-span-3">
-              <label htmlFor="pickupTime" className="block text-sm font-medium text-gray-800">
-                Preferred Pickup Time
-              </label>
+            <div className="sm:col-span-6">
+              <label htmlFor="pickupTime" className="mt-1 mb-4 text-base">
+              Preferred Pickup Time
+            </label>
               <div className="mt-1">
                 <input
                   type="time"
@@ -1329,9 +1337,9 @@ export default function Home() {
             </div>
 
             <div className="sm:col-span-6">
-              <label htmlFor="pickupPhoneNumber" className="block text-sm font-medium text-gray-800">
-                Cell Phone Number
-              </label>
+              <label htmlFor="pickupPhoneNumber" className="mt-1 mb-4 text-base">
+              Cell Phone Number
+            </label>
               <p className="text-xs text-gray-500">*Where UberHealth can text you updates on pickup status</p>
               <div className="mt-1">
                 <input
@@ -1560,9 +1568,12 @@ export default function Home() {
                       style={{ backgroundColor: '#3E8275' }}
                     >
                       {step === steps.length ? 'Submit' : ''}
-                      {step !== 1 && step !== 2 && step !== steps.length ? 'Continue' : ''}
-                      {step === 2 ? 'Start Assessment' : ''}
+                      {step !== 1 && step !== 2 && step !== 7 && step !== 8 && step !== 10 && step !== steps.length ? 'Next' : ''}
                       {step === 1 ? 'Verify My Benefits' : ''}
+                      {step === 2 ? 'Start Assessment' : ''}
+                      {step === 7 ? 'Submit Assessment' : ''}
+                      {step === 8 ? 'Continue' : ''}
+                      {step === 10 ? 'Submit' : ''}
                     </button>
                   )}
                   {step === 1 && (
