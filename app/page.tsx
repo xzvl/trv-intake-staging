@@ -1214,6 +1214,89 @@ export default function Home() {
     const minDate = new Date();
     minDate.setMinutes(minDate.getMinutes() + 30);
     const minTimeString = minDate.toTimeString().slice(0, 5);
+    const formatDateTime = (date: string, time: string) => {
+      const dateObj = new Date(`${date}T${time}`);
+      return dateObj.toLocaleString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+      });
+    };
+    const formatDate = (date: string | null) => {
+      if (!date) return "";
+      const dateObj = new Date(date);
+      return dateObj.toLocaleDateString('en-US', { 
+        month: '2-digit', 
+        day: '2-digit', 
+        year: 'numeric' 
+      });
+    };
+    const formatTime = (time: string | null) => {
+      if (!time) return "";
+      const dateObj = new Date(`1970-01-01T${time}`);
+      return dateObj.toLocaleString('en-US', { 
+        hour: 'numeric', 
+        minute: 'numeric', 
+        hour12: true 
+      });
+    };
+    const getLocationLabel = (value: string) => {
+      const locationOptions: { [key: string]: { name: string; link?: string; links?: string[] } } = {
+        'iaff': {
+          name: 'IAFF Center of Excellence',
+          link: 'https://maps.app.goo.gl/ngYzk4f3smZLuP4B9',
+        },
+        'orlando': {
+          name: 'Orlando Recovery Center',
+          link: 'https://maps.app.goo.gl/sfLTWXooBAKDdSiZA',
+        },
+        'atlanta': {
+          name: 'The Recovery Village Atlanta',
+          link: 'https://maps.app.goo.gl/LjtQDhbxLKcbFjbT6',
+        },
+        'columbus': {
+          name: 'The Recovery Village Columbus',
+          link: 'https://maps.app.goo.gl/YMost3t6y8CX6UzEA',
+        },
+        'umatilla': {
+          name: 'The Recovery Village Umatilla',
+          link: 'https://maps.app.goo.gl/ieJQQ8SSuFz7YbWcA',
+        },
+        'kansas_city': {
+          name: 'The Recovery Village Kansas City',
+          link: 'https://maps.app.goo.gl/mzhEGDyFcgsPLJ8n9',
+        },
+        'palm_beach': {
+          name: 'The Recovery Village Palm Beach',
+          link: 'https://maps.app.goo.gl/pfL6jSvYPsbDx4gx9',
+        },
+        'cherry_hill': {
+          name: 'The Recovery Village Cherry Hill',
+          link: 'https://maps.app.goo.gl/2c8xM5nfkhi5ZxKZ7',
+        },
+        'palmer_lake': {
+          name: 'The Recovery Village Palmer Lake',
+          link: 'https://maps.app.goo.gl/LXWKycWqRkw8huA3A',
+        },
+        'indianapolis': {
+          name: 'The Recovery Village Indianapolis',
+          link: 'https://maps.app.goo.gl/JBN2hMiPXKsVmCeC8',
+        },
+        'ridgefield': {
+          name: 'The Recovery Village Ridgefield',
+          links: [
+            'https://maps.app.goo.gl/ER4CiNCWmYrikstt9',
+            'https://maps.app.goo.gl/sidQdBjZXvdwgmZv7',
+          ],
+        },
+      };
+
+      return locationOptions[value];
+    };
+    const facilityInfo = getLocationLabel(formData.location);
 
     return (
       <>
@@ -1402,6 +1485,24 @@ export default function Home() {
         minute: 'numeric'
       });
     };
+    const formatDate = (date: string | null) => {
+      if (!date) return "";
+      const dateObj = new Date(date);
+      return dateObj.toLocaleDateString('en-US', { 
+        month: '2-digit', 
+        day: '2-digit', 
+        year: 'numeric' 
+      });
+    };
+    const formatTime = (time: string | null) => {
+      if (!time) return "";
+      const dateObj = new Date(`1970-01-01T${time}`);
+      return dateObj.toLocaleString('en-US', { 
+        hour: 'numeric', 
+        minute: 'numeric', 
+        hour12: true 
+      });
+    };
 
     const getLocationLabel = (value: string) => {
       const locationOptions: { [key: string]: { name: string; link?: string; links?: string[] } } = {
@@ -1478,74 +1579,63 @@ export default function Home() {
     }, [formData]);
 
     return (
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-green-600">Congratulations!</h2>
-        <p className="mt-4 text-gray-600">Your admission has been scheduled. Here's a summary of your information:</p>
-        <div className="mt-8 space-y-4">
-          {/* Display facility name and link */}
-          <p className="text-sm text-gray-700">
-            Facility: {facilityInfo.name}{' '}
-            {facilityInfo.link && (
-              <a href={facilityInfo.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-                View on Map
-              </a>
-            )}
-          </p>
-          {/* For Ridgefield, display both links */}
-          {facilityInfo.links && facilityInfo.links.length > 0 && (
-            <div className="text-sm text-gray-700">
-              <p>Facility Links:</p>
-              {facilityInfo.links.map((link, index) => (
-                <p key={index}>
-                  <a href={link} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-                    Location {index + 1}
-                  </a>
-                </p>
-              ))}
-            </div>
-          )}
-          <p className="text-sm text-gray-700">Treatment Type: {formData.allTreatmentType}</p>
-          <p className="text-sm text-gray-700">
-            Travel Arrangements: {formData.travelArrangements === 'No' 
-              ? "I need help with transportation. I agree to repay the actual cost of transportation to the facility which must be within facility travel coordination policy guidelines and will complete any required agreement upon or in advance of my arrival" 
-              : formData.travelArrangements}
-          </p>
-          {formData.travelArrangements === 'Yes' && (
-            <p className="text-sm text-gray-700">
-              Your admission is scheduled for {formatDateTime(formData.admissionDate, formData.admissionTime)}.
-            </p>
-          )}
-          {formData.travelArrangements === 'No' && (
-            <>
-              <p className="text-sm text-gray-700">Pickup Address: {formData.pickupAddress}</p>
-              <p className="text-sm text-gray-700">
-                Your UberHealth pickup is scheduled for {formatDateTime(formData.pickupDate, formData.pickupTime)}. 
-                We'll send details to {formData.pickupPhoneNumber}.
+      <>
+        <div className="insurance-result-wrap">
+          <h3>Your admission is scheduled!</h3>
+          <p className="mt-1 text-sm text-gray-600">Here is a summary of your information:</p>
+          <div className="mt-4 p-4 text-green-700 border-green-700 bg-green-50">
+            <p className="font-base text-black">
+            <span className="font-600">Facility:</span> <span>{facilityInfo.name}{' '}
+              {facilityInfo.link && (
+                <a href={facilityInfo.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-gray-600">
+                  View Map
+                </a>
+              )}</span><br />
+              {facilityInfo.links && facilityInfo.links.length > 0 && (
+                <>
+                  <span className="font-600">Facility Links:</span>
+                  {facilityInfo.links.map((link, index) => (
+                    <a href={link} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                        Location {index + 1}
+                    </a>
+                  ))}
+                </>
+              )}
+              <span className="font-600">Treatment Type:</span> <span>{formData.allTreatmentType}</span><br />
+              <span className="font-600">Travel Arrangements:</span> <span className="font-medium">{formData.travelArrangements === 'No' 
+                ? "No, I need help with transportation. I agree to repay the actual cost of transportation to the facility which must be within facility travel coordination policy guidelines and will complete any required agreement upon or in advance of my arrival." 
+                : formData.travelArrangements}</span><br />
+                {formData.travelArrangements === 'Yes' && (
+                  <>
+                    <span className="font-600">Admission Date:</span> <span>{formatDate(formData.admissionDate)}</span><br />
+                    <span className="font-600">Admission Time:</span> <span>{formatTime(formData.admissionTime)}</span>
+                  </>
+                )}
+                {formData.travelArrangements === 'No' && (
+                  <>
+                    <span className="font-600">Pickup Address:</span> <span>{formData.pickupAddress}</span><br />
+                    <span className="font-600">Pickup Date:</span> <span>{formatDate(formData.pickupDate)}</span><br />
+                    <span className="font-600">Preferred Pickup Time:</span> <span>{formatTime(formData.pickupTime)}</span><br />
+                    <span className="font-600">Cell Phone Number:</span> <span>{formData.pickupPhoneNumber}</span>
+                  </>
+                )}
+              
               </p>
-            </>
-          )}
+          </div>
         </div>
-        {/* New callout box with updated message */}
-        <div className="mt-8 p-4 bg-blue-100 border-l-4 border-blue-500">
-          <h3 className="text-lg font-semibold text-blue-700">What's next?</h3>
-          <p className="mt-2 text-blue-700">
-            You will receive a call and SMS in the next few minutes from a Recovery Advocate to discuss your admission and
-            answer any questions you may have. Please answer your phone when we call. If you have any questions in the
-            meantime, feel free to call us directly at{' '}
-            <a href="tel:8446108909" className="text-blue-700 underline">
-              844-610-8909
-            </a>
-            .
-          </p>
-          <p className="mt-2 text-blue-700">
-          Have questions on what you need to bring to rehab? Read more: 
-            <a href="https://www.therecoveryvillage.com/treatment-program/what-to-bring-to-rehab/" className="text-blue-700 underline">
-              What to Bring to Rehab
-            </a>
-            .
-          </p>
+        <h2 className="text-lg font-bold text-gray-900">What’s next?</h2>
+        <p className="mt-1 mb-4 text-base text-gray-600">You will receive a call and SMS in the next few minutes from a Recovery Advocate to discuss your admission and answer any questions you may have. Please answer your phone when we call. If you have any questions in the meantime, feel free to call us directly at {' '}
+              <a href="tel:8446108909" className="text-blue-700 underline text-gray-600">
+                844-610-8909
+              </a>.</p>
+        <p className="mt-1 mb-4 text-base text-gray-600">Have questions on what you need to bring to rehab? Read more: <a href="https://www.therecoveryvillage.com/treatment-program/what-to-bring-to-rehab/" className="text-blue-700 font-bold underline text-dark-blue-900">
+                What to Bring to Rehab
+              </a>.</p>
+
+        <div className="text-center">
+          <p className="mt-1 mb-4 text-base text-black font-bold ">Thank you for trusting us with your <br />recovery.</p>
         </div>
-      </div>
+      </>
     );
   };
 

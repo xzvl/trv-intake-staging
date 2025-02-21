@@ -68,6 +68,16 @@ font-family: 'Montserrat';
     font-size: 20px;
     font-weight: 600;
 }
+.insurance-result-wrap .p-4 p.text-black{
+    color: #000000;
+    font-size: 16px;
+}
+.insurance-result-wrap .p-4 p.text-black span{
+    font-weight: 400;
+}
+.insurance-result-wrap .p-4 p.text-black span.font-600{
+    font-weight: 600;
+}
 .insurance-result-wrap .border-red-700 p{
     color: rgb(185 28 28 / var(--tw-text-opacity, 1));
 }
