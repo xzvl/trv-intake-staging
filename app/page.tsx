@@ -1504,7 +1504,7 @@ export default function Home() {
               ))}
             </div>
           )}
-          <p className="text-sm text-gray-700">Treatment Type: {formData.treatmentType}</p>
+          <p className="text-sm text-gray-700">Treatment Type: {formData.allTreatmentType}</p>
           <p className="text-sm text-gray-700">
             Travel Arrangements: {formData.travelArrangements === 'No' 
               ? "I need help with transportation. I agree to repay the actual cost of transportation to the facility which must be within facility travel coordination policy guidelines and will complete any required agreement upon or in advance of my arrival" 
