@@ -696,6 +696,7 @@ export default function Home() {
             </div>
           </div>
         )}
+        <span className="text-sm font-bold text-dark-blue-900">NEXT STEP: ASSESSMENT</span>
         <h2 className="text-lg font-medium text-gray-900">Ready to start treatment?</h2>
         <p className="mt-1 mb-4 text-base text-gray-600">
         Complete this short assessment to get your treatment scheduled.
