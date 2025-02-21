@@ -1601,6 +1601,17 @@ export default function Home() {
                   ))}
                 </>
               )}
+              {/* For Ridgefield, display both links */}
+              {facilityInfo.links && facilityInfo.links.length > 0 && (
+                <>
+                  <span className="font-600">Facility Links:</span>
+                  {facilityInfo.links.map((link, index) => (
+                      <a key={index} href={link} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                        Location {index + 1}
+                      </a>
+                  ))}
+                </>
+              )}
               <span className="font-600">Treatment Type:</span> <span>{formData.allTreatmentType}</span><br />
               <span className="font-600">Travel Arrangements:</span> <span className="font-medium">{formData.travelArrangements === 'No' 
                 ? "No, I need help with transportation. I agree to repay the actual cost of transportation to the facility which must be within facility travel coordination policy guidelines and will complete any required agreement upon or in advance of my arrival." 
