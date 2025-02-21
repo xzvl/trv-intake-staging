@@ -1591,16 +1591,6 @@ export default function Home() {
                   View Map
                 </a>
               )}</span><br />
-              {facilityInfo.links && facilityInfo.links.length > 0 && (
-                <>
-                  <span className="font-600">Facility Links:</span>
-                  {facilityInfo.links.map((link, index) => (
-                    <a href={link} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-                        Location {index + 1}
-                    </a>
-                  ))}
-                </>
-              )}
               {/* For Ridgefield, display both links */}
               {facilityInfo.links && facilityInfo.links.length > 0 && (
                 <>
