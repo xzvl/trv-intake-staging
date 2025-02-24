@@ -11,11 +11,11 @@ interface FormData {
   phoneNumber: string;
   dateOfBirth: string;
   otherInsuranceProvider?: string;
-  allTreatmentType: string[];
+  treatmentType: string[];
   location: string;
   primaryIssue: string;
   email: string;
-  allSubstancesPast2Weeks: string[];
+  substancesPast2Weeks: string[];
   receivingCommunications: string;
   experiencingWithdrawal: string;
   chronicConditions: string[];
@@ -66,11 +66,11 @@ const initialFormState: FormData = {
   phoneNumber: '',
   dateOfBirth: '',
   otherInsuranceProvider: '',
-  allTreatmentType: [],
+  treatmentType: [],
   location: '',
   primaryIssue: '',
   email: '',
-  allSubstancesPast2Weeks: [],
+  substancesPast2Weeks: [],
   receivingCommunications: 'No',
   experiencingWithdrawal: 'Yes',
   chronicConditions: [],
@@ -148,13 +148,13 @@ export default function Home() {
   const [submitMessage, setSubmitMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
   const [triggerMessage, settriggerMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
   const [vobMessage, setVOBMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
-  const allTreatmentType = [
+  var allTreatmentType = [
     { name: "Inpatient Treatment for Mental Health", checked: false },
     { name: "Medical Detox", checked: false },
     { name: "Inpatient Treatment for Substance Use", checked: false },
     { name: "Outpatient Treatment for Substance Use", checked: false },
   ];
-  const allSubstancesPast2Weeks = [
+  var allSubstancesPast2Weeks = [
     { name: "Alcohol", checked: false },
     { name: "Opiates", checked: false },
     { name: "Benzos", checked: false },
@@ -164,7 +164,7 @@ export default function Home() {
     { name: "Hallucinogens", checked: false },
   ];
 
-  const allChronicConditions = [
+  var allChronicConditions = [
     { name: "Abdominal pains", checked: false },
     { name: "AFIB", checked: false },
     { name: "Cancer", checked: false },
@@ -194,7 +194,7 @@ export default function Home() {
     { name: "Vertigo", checked: false },
   ];
   
-  const allMentalHealthConditions = [
+  var allMentalHealthConditions = [
     { name: "ADHD", checked: false },
     { name: "Autism", checked: false },
     { name: "Depression", checked: false },
@@ -209,9 +209,9 @@ export default function Home() {
   ];
   
   const [treatmentType, setTreatmentType] = useState(allTreatmentType);
-  const [SubstancesPast2Weeks, setSubstancesPast2Weeks] = useState(allSubstancesPast2Weeks);
-  const [ChronicConditions, setChronicConditions] = useState(allChronicConditions);
-  const [MentalHealthConditions, setMentalHealthConditions] = useState(allMentalHealthConditions);
+  const [substancesPast2Weeks, setSubstancesPast2Weeks] = useState(allSubstancesPast2Weeks);
+  const [chronicConditions, setChronicConditions] = useState(allChronicConditions);
+  const [mentalHealthConditions, setMentalHealthConditions] = useState(allMentalHealthConditions);
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -233,6 +233,7 @@ export default function Home() {
   };
 
   const handleVOBSubmit = async () => {
+    /*
     try {
       const response = await fetch('https://7os5kk.buildship.run/createRecord', {
         method: 'POST',
@@ -254,6 +255,9 @@ export default function Home() {
       console.error('Error submitting VOB:', error);
       setVOBMessage({ type: 'error', text: 'Error submitting VOB. Please try again.' });
     }
+    */
+    /* NEED TO UPDATE XZ */
+    setVOBMessage( { type: 'success', text: 'Success! We accept your insurance for treatment!' } );
   };
 
   const validateStep = (currentStep: number): boolean => {
@@ -261,9 +265,9 @@ export default function Home() {
       case 1:
         return !!formData.location && !!formData.insuranceProvider && !!formData.policyNumber && !!formData.phoneNumber && !!formData.email && !!formData.receivingCommunications;
       case 2:
-        return !!formData.allTreatmentType;
+        return !!formData.treatmentType;
       case 3:
-        return !!formData.allSubstancesPast2Weeks && !!formData.experiencingWithdrawal;
+        return !!formData.substancesPast2Weeks && !!formData.experiencingWithdrawal;
       case 4:
         return true;
       case 5:
@@ -286,8 +290,9 @@ export default function Home() {
             !!formData.pickupDate &&
             !!formData.pickupTime
           );
+        } else{
+          return false;
         }
-        return false;
       case 11:
         return true;
       default:
@@ -306,6 +311,23 @@ export default function Home() {
         setSubmitMessage({ type: 'error', text: 'Invalid phone number format. Use E.164 format, e.g., +1234567890.' });
         return;
       }
+    }
+
+    if (step === 2) {
+      const checkedtreatmentType = treatmentType.filter(item => item.checked).map(item => item.name);
+      setFormData(prevState => ({ ...prevState, treatmentType: checkedtreatmentType }));
+    }
+    if (step === 3) {
+      const checkedsubstancesPast2Weeks = substancesPast2Weeks.filter(item => item.checked).map(item => item.name);
+      setFormData(prevState => ({ ...prevState, substancesPast2Weeks: checkedsubstancesPast2Weeks }));
+    }
+    if (step === 4) {
+      const checkedchronicConditions = chronicConditions.filter(item => item.checked).map(item => item.name);
+      setFormData(prevState => ({ ...prevState, chronicConditions: checkedchronicConditions }));
+    }
+    if (step === 6) {
+      const checkedmentalHealthConditions = mentalHealthConditions.filter(item => item.checked).map(item => item.name);
+      setFormData(prevState => ({ ...prevState, mentalHealthConditions: checkedmentalHealthConditions }));
     }
     
     if (step === 10 && formData.travelArrangements === 'No') {
@@ -340,6 +362,7 @@ export default function Home() {
         }
         setVOBMessage(null);
       } else if (step === 8) {
+        /*
         try {
           const response = await fetch('https://7os5kk.buildship.run/createRecord', {
             method: 'POST',
@@ -363,7 +386,12 @@ export default function Home() {
           console.error('Error submitting assessment:', error);
           setSubmitMessage({ type: 'error', text: 'Error submitting assessment. Please try again.' });
         }
-      } else if (step === 9 || step === 11) {
+        */
+        /* NEED TO UPDATE XZ */
+        console.log('step 8');
+        setStep(10);
+      } else if (step === 10 || step === 11) {
+        /*
         try {
           const response = await fetch('https://7os5kk.buildship.run/createRecord', {
             method: 'POST',
@@ -382,6 +410,10 @@ export default function Home() {
           console.error('Error scheduling admission:', error);
           setSubmitMessage({ type: 'error', text: 'Error scheduling admission. Please try again.' });
         }
+        */
+        /* NEED TO UPDATE XZ */
+        console.log('step 10');
+        setIsSubmitted(true);
       }
     } else {
       setSubmitMessage({ type: 'error', text: 'Please fill in all required fields.' });
@@ -712,7 +744,7 @@ export default function Home() {
                 checkHandler={() => updateCheckStatus(index)}
                 label={substance.name}
                 index={index}
-                id="allTreatmentType"
+                id="treatmentType"
               />
             ))}
         </div>
@@ -723,7 +755,7 @@ export default function Home() {
   const renderAdditionalInfo = () => {
     const updateCheckStatus = index => {
       setSubstancesPast2Weeks(
-        SubstancesPast2Weeks.map((substance, currentIndex) =>
+        substancesPast2Weeks.map((substance, currentIndex) =>
           currentIndex === index
             ? { ...substance, checked: !substance.checked }
             : substance
@@ -740,14 +772,14 @@ export default function Home() {
         Please select all substances you have used in the <u>past two weeks</u>.
         </p>
         <div className="mt-2 mb-4 space-y-2 new-ul-li-style">
-            {SubstancesPast2Weeks.map((substance, index) => (
+            {substancesPast2Weeks.map((substance, index) => (
               <Checkbox
                 key={substance.name}
                 isChecked={substance.checked}
                 checkHandler={() => updateCheckStatus(index)}
                 label={substance.name}
                 index={index}
-                id="allSubstancesPast2Weeks"
+                id="substancesPast2Weeks"
               />
             ))}
         </div>
@@ -779,7 +811,7 @@ export default function Home() {
   const renderMedicalNeeds = () => {
     const updateCheckStatus = index => {
       setChronicConditions(
-        ChronicConditions.map((chronicCondition, currentIndex) =>
+        chronicConditions.map((chronicCondition, currentIndex) =>
           currentIndex === index
             ? { ...chronicCondition, checked: !chronicCondition.checked }
             : chronicCondition
@@ -796,7 +828,7 @@ export default function Home() {
         Do you have any of the following medical conditions? <br />Select all that apply:
         </p>
         <div className="mt-2 mb-4 space-y-2 new-ul-li-style">
-            {ChronicConditions.map((chronicCondition, index) => (
+            {chronicConditions.map((chronicCondition, index) => (
               <Checkbox
                 key={chronicCondition.name}
                 isChecked={chronicCondition.checked}
@@ -862,7 +894,7 @@ export default function Home() {
   const renderMentalHealth = () => {
     const updateCheckStatus = index => {
       setMentalHealthConditions(
-        MentalHealthConditions.map((mentalHealthCondition, currentIndex) =>
+        mentalHealthConditions.map((mentalHealthCondition, currentIndex) =>
           currentIndex === index
             ? { ...mentalHealthCondition, checked: !mentalHealthCondition.checked }
             : mentalHealthCondition
@@ -881,7 +913,7 @@ export default function Home() {
             Do you have any of the following mental health conditions? <br />Select all that apply:
             </p>
             <div className="mt-2 space-y-2 new-ul-li-style">
-              {MentalHealthConditions.map((mentalHealthCondition, index) => (
+              {mentalHealthConditions.map((mentalHealthCondition, index) => (
                 <Checkbox
                   key={mentalHealthCondition.name}
                   isChecked={mentalHealthCondition.checked}
@@ -1560,6 +1592,13 @@ export default function Home() {
 
     const facilityInfo = getLocationLabel(formData.location);
 
+    const formatTreatmentTypes = (types) => {
+      if (types.length === 0) return "";
+      if (types.length === 1) return types[0];
+      if (types.length === 2) return types.join(" and ");
+      return types.slice(0, -1).join(", ") + ", and " + types[types.length - 1];
+    };
+
     useEffect(() => {
       const sendFinalSubmit = async () => {
         try {
@@ -1602,7 +1641,7 @@ export default function Home() {
                   ))}
                 </>
               )}
-              <span className="font-600">Treatment Type:</span> <span>{formData.allTreatmentType}</span><br />
+              <span className="font-600">Treatment Type:</span> <span>{formatTreatmentTypes(formData.treatmentType)}</span><br />
               <span className="font-600">Travel Arrangements:</span> <span className="font-medium">{formData.travelArrangements === 'No' 
                 ? "No, I need help with transportation. I agree to repay the actual cost of transportation to the facility which must be within facility travel coordination policy guidelines and will complete any required agreement upon or in advance of my arrival." 
                 : formData.travelArrangements}</span><br />
@@ -1635,6 +1674,13 @@ export default function Home() {
 
         <div className="text-center">
           <p className="mt-1 mb-4 text-base text-black font-bold ">Thank you for trusting us with your <br />recovery.</p>
+        </div>
+        <div className="text-center">
+        <button
+                      type="submit"
+                      className="btn-full-center inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-lg font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                      style={{ backgroundColor: '#3E8275' }}
+                    >Exit</button>
         </div>
       </>
     );
