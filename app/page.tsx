@@ -233,10 +233,10 @@ export default function Home() {
   };
 
   const handleVOBSubmit = async () => {
-    /*
+    /* 
     try {
       const response = await fetch('https://7os5kk.buildship.run/createRecord', {
-        method: 'POST',
+        method: 'POST', 
         headers: {
           'Content-Type': 'application/json',
         },
@@ -257,6 +257,11 @@ export default function Home() {
     }
     */
     /* NEED TO UPDATE XZ */
+    console.log('test1');
+    setFormData(prevState => ({
+      ...prevState,
+      vobResult: 'Positive',
+    }));
     setVOBMessage( { type: 'success', text: 'Success! We accept your insurance for treatment!' } );
   };
 
@@ -302,6 +307,8 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
     
     if (step === 1) {
       const phoneRegex = /^\+?[1-9]\d{1,14}$/;
@@ -388,7 +395,6 @@ export default function Home() {
         }
         */
         /* NEED TO UPDATE XZ */
-        console.log('step 8');
         setStep(10);
       } else if (step === 10 || step === 11) {
         /*
@@ -412,7 +418,6 @@ export default function Home() {
         }
         */
         /* NEED TO UPDATE XZ */
-        console.log('step 10');
         setIsSubmitted(true);
       }
     } else {
@@ -466,6 +471,23 @@ export default function Home() {
     );
   };
   
+  const Radiobox = ({ isChecked, label, checkHandler, index, id }) => {
+    return (
+      <div key={label} className="flex items-center">
+        <input
+          type="radio"
+          id={`${id}-${index}`}
+          name={id}
+          checked={isChecked}
+          onChange={checkHandler}
+          value={label}
+          className="h-4 w-4 rounded border-gray-400 text-yellow-500 focus:ring-yellow-500"
+        />
+        <label htmlFor={`${id}-${index}`} className="ml-2 block text-sm font-medium text-gray-800">{label}</label>
+      </div>
+    )
+  }
+
   const Checkbox = ({ isChecked, label, checkHandler, index, id }) => {
     return (
       <div key={label} className="flex items-center">
@@ -728,6 +750,13 @@ export default function Home() {
             </div>
           </div>
         )}
+        <div className="insurance-result-wrap">
+            <h3>Your Insurance Results</h3>
+            <p className="mt-1 text-sm text-gray-600">Results may take a few seconds to populate.</p>
+            <div className="mt-4 p-4 text-green-700 border-green-700 bg-green-50">
+              <p className="font-base">Success! We accept your insurance for treatment!</p>
+            </div>
+          </div>
         <span className="text-sm font-bold text-dark-blue-900">NEXT STEP: ASSESSMENT</span>
         <h2 className="text-lg font-medium text-gray-900">Ready to start treatment?</h2>
         <p className="mt-1 mb-4 text-base text-gray-600">
@@ -738,7 +767,7 @@ export default function Home() {
         </p>
         <div className="mt-2 space-y-2 new-ul-li-style">
             {treatmentType.map((substance, index) => (
-              <Checkbox
+              <Radiobox
                 key={substance.name}
                 isChecked={substance.checked}
                 checkHandler={() => updateCheckStatus(index)}
@@ -1358,7 +1387,7 @@ export default function Home() {
           </div>
         </div>
 
-        {formData.travelArrangements === 'Yes' && (
+        {formData.travelArrangements === 'No' && (
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-6">
               <label htmlFor="admissionDate" className="mt-1 mb-4 text-base">
@@ -1397,7 +1426,7 @@ export default function Home() {
           </div>
         )}
 
-        {formData.travelArrangements === 'No' && (
+        {formData.travelArrangements === 'Yes' && (
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <div className="sm:col-span-6">
               <label htmlFor="pickupAddress" className="mt-1 mb-4 text-base">
