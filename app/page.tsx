@@ -233,7 +233,6 @@ export default function Home() {
   };
 
   const handleVOBSubmit = async () => {
-    /* 
     try {
       const response = await fetch('https://7os5kk.buildship.run/createRecord', {
         method: 'POST', 
@@ -255,14 +254,6 @@ export default function Home() {
       console.error('Error submitting VOB:', error);
       setVOBMessage({ type: 'error', text: 'Error submitting VOB. Please try again.' });
     }
-    */
-    /* NEED TO UPDATE XZ */
-    console.log('test1');
-    setFormData(prevState => ({
-      ...prevState,
-      vobResult: 'Positive',
-    }));
-    setVOBMessage( { type: 'success', text: 'Success! We accept your insurance for treatment!' } );
   };
 
   const validateStep = (currentStep: number): boolean => {
@@ -286,9 +277,9 @@ export default function Home() {
       case 9:
         return true;
       case 10:
-        if (formData.travelArrangements === 'Yes') {
+        if (formData.travelArrangements === 'No') {
           return !!formData.admissionDate && !!formData.admissionTime;
-        } else if (formData.travelArrangements === 'No') {
+        } else if (formData.travelArrangements === 'Yes') {
           return (
             !!formData.pickupAddress &&
             !!formData.pickupPhoneNumber &&
@@ -309,6 +300,7 @@ export default function Home() {
     e.preventDefault();
 
     window.scrollTo({ top: 0, behavior: "smooth" });
+
     
     if (step === 1) {
       const phoneRegex = /^\+?[1-9]\d{1,14}$/;
@@ -337,7 +329,9 @@ export default function Home() {
       setFormData(prevState => ({ ...prevState, mentalHealthConditions: checkedmentalHealthConditions }));
     }
     
-    if (step === 10 && formData.travelArrangements === 'No') {
+    if (step === 10 && formData.travelArrangements === 'Yes') {
+      console.log('test 12411' + formData.travelArrangements);
+
       const phoneRegex = /^\+?[1-9]\d{1,14}$/;
       const addressPattern = /[A-Za-z].*\d|\d.*[A-Za-z]/;
       
@@ -750,13 +744,6 @@ export default function Home() {
             </div>
           </div>
         )}
-        <div className="insurance-result-wrap">
-            <h3>Your Insurance Results</h3>
-            <p className="mt-1 text-sm text-gray-600">Results may take a few seconds to populate.</p>
-            <div className="mt-4 p-4 text-green-700 border-green-700 bg-green-50">
-              <p className="font-base">Success! We accept your insurance for treatment!</p>
-            </div>
-          </div>
         <span className="text-sm font-bold text-dark-blue-900">NEXT STEP: ASSESSMENT</span>
         <h2 className="text-lg font-medium text-gray-900">Ready to start treatment?</h2>
         <p className="mt-1 mb-4 text-base text-gray-600">
@@ -857,16 +844,16 @@ export default function Home() {
         Do you have any of the following medical conditions? <br />Select all that apply:
         </p>
         <div className="mt-2 mb-4 space-y-2 new-ul-li-style">
-            {chronicConditions.map((chronicCondition, index) => (
-              <Checkbox
-                key={chronicCondition.name}
-                isChecked={chronicCondition.checked}
-                checkHandler={() => updateCheckStatus(index)}
-                label={chronicCondition.name}
-                index={index}
-                id="chronicConditions"
-              />
-            ))}
+          {chronicConditions.map((chronicCondition, index) => (
+            <Checkbox
+              key={chronicCondition.name}
+              isChecked={chronicCondition.checked}
+              checkHandler={() => updateCheckStatus(index)}
+              label={chronicCondition.name}
+              index={index}
+              id="chronicConditions"
+            />
+          ))}
         </div>
       </>
     );
@@ -1674,13 +1661,13 @@ export default function Home() {
               <span className="font-600">Travel Arrangements:</span> <span className="font-medium">{formData.travelArrangements === 'No' 
                 ? "No, I need help with transportation. I agree to repay the actual cost of transportation to the facility which must be within facility travel coordination policy guidelines and will complete any required agreement upon or in advance of my arrival." 
                 : formData.travelArrangements}</span><br />
-                {formData.travelArrangements === 'Yes' && (
+                {formData.travelArrangements === 'No' && (
                   <>
                     <span className="font-600">Admission Date:</span> <span>{formatDate(formData.admissionDate)}</span><br />
                     <span className="font-600">Admission Time:</span> <span>{formatTime(formData.admissionTime)}</span>
                   </>
                 )}
-                {formData.travelArrangements === 'No' && (
+                {formData.travelArrangements === 'Yes' && (
                   <>
                     <span className="font-600">Pickup Address:</span> <span>{formData.pickupAddress}</span><br />
                     <span className="font-600">Pickup Date:</span> <span>{formatDate(formData.pickupDate)}</span><br />
