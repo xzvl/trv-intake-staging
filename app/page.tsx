@@ -149,7 +149,6 @@ export default function Home() {
   const [triggerMessage, settriggerMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
   const [vobMessage, setVOBMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
   var allTreatmentType = [
-    { name: "Inpatient Treatment for Mental Health", checked: false },
     { name: "Medical Detox", checked: false },
     { name: "Inpatient Treatment for Substance Use", checked: false },
     { name: "Outpatient Treatment for Substance Use", checked: false },
@@ -608,7 +607,7 @@ export default function Home() {
                 id="policyNumber"
                 value={formData.policyNumber}
                 onChange={handleChange}
-                placeholder="Placeholder"
+                placeholder="Policy Number"
                 className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
               />
             </div>
@@ -695,7 +694,7 @@ export default function Home() {
                 id="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Placeholder"
+                placeholder="Email Address"
                 required
                 className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base text-gray-700 shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
               />
@@ -764,6 +763,9 @@ export default function Home() {
               />
             ))}
         </div>
+        <p className="mt-4 mb-4 text-base">
+        Seeking treatment for mental health only? Please call us directly to get admitted.
+        </p>
       </>
     );
   };
@@ -1480,6 +1482,7 @@ export default function Home() {
                   id="pickupPhoneNumber"
                   value={formData.pickupPhoneNumber}
                   onChange={handleChange}
+                  placeholder="Cell Phone Number"
                   className="block w-full rounded-md border border-gray-400 bg-white px-3 py-2 text-base text-gray-700 shadow-sm focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 sm:text-sm"
                   required
                 />
@@ -1690,13 +1693,6 @@ export default function Home() {
 
         <div className="text-center">
           <p className="mt-1 mb-4 text-base text-black font-bold ">Thank you for trusting us with your <br />recovery.</p>
-        </div>
-        <div className="text-center">
-        <button
-                      type="submit"
-                      className="btn-full-center inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-lg font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
-                      style={{ backgroundColor: '#3E8275' }}
-                    >Exit</button>
         </div>
       </>
     );

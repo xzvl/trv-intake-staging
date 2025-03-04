@@ -42,7 +42,7 @@ font-family: 'Montserrat';
 .new-ul-li-style label{
     font-size: 1rem;
     font-weight: 400;
-    color: #3A3E44;
+    color: #000000;
 }
 .new-form-container-wrap{
     border-left: 1px solid #D9D9D9;
@@ -65,7 +65,7 @@ font-family: 'Montserrat';
 }
 .insurance-result-wrap .p-4 p{
     color: #1D5248;
-    font-size: 20px;
+    font-size: 0.875rem;
     font-weight: 600;
 }
 .insurance-result-wrap .p-4 p.text-black{
@@ -142,4 +142,7 @@ font-family: 'Montserrat';
     justify-content: center;
     width: 100%;
     margin-bottom: 15px;
+}
+.text-black-600{
+    color: rgb(0 0 0);
 }
