@@ -300,6 +300,7 @@ export default function Home() {
 
     window.scrollTo({ top: 0, behavior: "smooth" });
 
+    var step2verify;
     
     if (step === 1) {
       const phoneRegex = /^\+?[1-9]\d{1,14}$/;
@@ -313,6 +314,7 @@ export default function Home() {
 
     if (step === 2) {
       const checkedtreatmentType = treatmentType.filter(item => item.checked).map(item => item.name);
+      step2verify = checkedtreatmentType;
       setFormData(prevState => ({ ...prevState, treatmentType: checkedtreatmentType }));
     }
     if (step === 3) {
@@ -329,8 +331,6 @@ export default function Home() {
     }
     
     if (step === 10 && formData.travelArrangements === 'Yes') {
-      console.log('test 12411' + formData.travelArrangements);
-
       const phoneRegex = /^\+?[1-9]\d{1,14}$/;
       const addressPattern = /[A-Za-z].*\d|\d.*[A-Za-z]/;
       
@@ -349,7 +349,7 @@ export default function Home() {
     if (validateStep(step)) {
       if (step < 8) {
         if ( step === 2 ){
-          if ( formData.primaryIssue === 'mental_health' ){
+          if ( step2verify == 'Medical Detox' ) {
             setStep(11);
           } else{
             setStep(step + 1);
@@ -433,7 +433,7 @@ export default function Home() {
   ];
 
   const renderSteps = () => {
-    if (step === 1) {
+    if (step === 1 || step === 2 || step === 11 ) {
       // Do not render any steps or progress indicators for step 1
       return null;
     }
@@ -1241,10 +1241,10 @@ export default function Home() {
   const renderReview = () => {
     return (
       <>
-        <h2 className="text-lg font-medium text-gray-900">Please Call Us</h2>
-        <p className="mt-1 text-sm text-gray-600">
-          Based on your assessment, you'll need to speak with one of our intake coordinators to schedule your admission. Please call us at 844-610-8909
-        </p>
+      <div className="insurance-result-wrap">
+        <h3>Please Call Us</h3>
+        <p className="mt-1 text-sm text-gray-600">Based on your assessment, you'll need to speak with one of our intake coordinators to schedule your admission. Please call us at <a href="tel:8446108909">844-610-8909</a>.</p>
+      </div>
       </>
     );
   };
@@ -1252,10 +1252,10 @@ export default function Home() {
   const renderNewMentalHealth = () => {
     return (
       <>
-        <h2 className="text-lg font-medium text-gray-900">Please Call Us</h2>
-        <p className="mt-1 text-sm text-gray-600">
-        Please call our admissions team at 844-610-8909 to proceed with the admission process.
-        </p>
+        <div className="insurance-result-wrap">
+          <h3>Please Call Us</h3>
+          <p className="mt-1 text-sm text-gray-600">Please call our admissions team at <a href="tel:8446108909">844-610-8909</a> to proceed with the admission process.</p>
+        </div>
       </>
     );
   };
